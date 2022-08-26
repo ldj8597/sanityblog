@@ -4,14 +4,15 @@ import Hero from "./Hero";
 
 interface Props {
   children: ReactNode;
+  hasHero?: boolean;
 }
 
-function Layout({ children }: Props) {
+function Layout({ children, hasHero = false }: Props) {
   return (
     <div className="max-w-5xl mx-auto container px-5">
       <Header />
       <main>
-        <Hero />
+        {hasHero && <Hero />}
         {children}
       </main>
     </div>
