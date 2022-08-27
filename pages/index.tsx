@@ -15,8 +15,6 @@ interface Props {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const posts = await sanityClient.fetch(indexQuery);
-  console.log(posts);
-  console.log(urlFor(posts[0].author.image).url());
 
   return {
     props: {
@@ -26,7 +24,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 const Home: NextPageWithLayout<Props> = ({ posts }) => {
-  console.log(posts);
   return (
     <div className="">
       <Head>
