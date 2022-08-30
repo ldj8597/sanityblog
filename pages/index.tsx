@@ -5,7 +5,7 @@ import { ReactElement } from "react";
 import Layout from "../components/Layout";
 import PostPreview from "../components/PostPreview";
 import { indexQuery } from "../lib/queries";
-import { sanityClient, urlFor } from "../lib/sanity";
+import { client, urlFor } from "../lib/sanity";
 import { Post } from "../typings";
 import { NextPageWithLayout } from "./_app";
 
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const posts = await sanityClient.fetch(indexQuery);
+  const posts = await client.fetch(indexQuery);
 
   return {
     props: {

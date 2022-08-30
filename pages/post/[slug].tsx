@@ -6,15 +6,21 @@ import { ParsedUrlQuery } from "querystring";
 import { ReactElement } from "react";
 import Layout from "../../components/Layout";
 import { postQuery, slugQuery } from "../../lib/queries";
-import { sanityClient, urlFor } from "../../lib/sanity";
-import { Post } from "../../typings";
+import { client, urlFor } from "../../lib/sanity";
+import { Comment, Post } from "../../typings";
 import { NextPageWithLayout } from "../_app";
 import PortableText from "react-portable-text";
 import PostHeader from "../../components/PostHeader";
 import PostBody from "../../components/PostBody";
+import CommentForm from "../../components/CommentForm";
+import Comments from "../../components/Comments";
+
+interface PostWithComments extends Post {
+  comments: Comment[];
+}
 
 interface Props {
-  post: Post;
+  post: PostWithComments;
 }
 
 interface IParams extends ParsedUrlQuery {
@@ -43,7 +49,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { slug } = context.params as IParams;
-  const post: Post = await sanityClient.fetch(postQuery, {
+  const post: Post = await client.fetch(postQuery, {
     slug,
   });
 
@@ -63,7 +69,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 const PostPage: NextPageWithLayout<Props> = ({ post }) => {
   const router = useRouter();
-  console.log(post.body);
+  // console.log(post);
 
   return (
     <>
@@ -71,7 +77,7 @@ const PostPage: NextPageWithLayout<Props> = ({ post }) => {
         <title></title>
       </Head>
       {post && (
-        <div>
+        <div className="space-y-10">
           {/* Banner image */}
           <div className="relative w-full h-40 mb-5">
             <Image
@@ -82,12 +88,12 @@ const PostPage: NextPageWithLayout<Props> = ({ post }) => {
             />
           </div>
 
-          {/* Blog contents */}
-          <article className="px-5 py-5 flex flex-col gap-10 max-w-3xl mx-auto">
+          <div className="px-5 py-5 flex flex-col gap-10 max-w-3xl mx-auto">
             <PostHeader post={post} />
-
             <PostBody post={post} />
-          </article>
+            <CommentForm post={post} />
+            <Comments comments={post.comments} />
+          </div>
         </div>
       )}
     </>
